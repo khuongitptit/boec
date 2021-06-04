@@ -3,7 +3,7 @@ from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
 PAYMENT_CHOICES = (
-    ('S', 'Stripe'),
+    ('C', 'Thanh toán khi nhận hàng'),
     ('P', 'PayPal')
 )
 
@@ -20,6 +20,9 @@ class CheckoutForm(forms.Form):
     country = CountryField(blank_label='(select country)').formfield(widget=CountrySelectWidget(attrs={
         'class': 'custom-select d-block w-100'
 
+    }))
+    city = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control'
     }))
     zip = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control'

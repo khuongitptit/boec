@@ -173,16 +173,16 @@ class CheckoutView(View):
         form = CheckoutForm(self.request.POST or None)
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)
+            print("order",order)
             print(self.request.POST)
             if form.is_valid():
                 street_address = form.cleaned_data.get('street_address')
                 apartment_address = form.cleaned_data.get('apartment_address')
                 country = form.cleaned_data.get('country')
                 zip = form.cleaned_data.get('zip')
-                # add functionality for these fields
-                # same_shipping_address = form.cleaned_data.get(
-                #     'same_shipping_address')
-                # save_info = form.cleaned_data.get('save_info')
+                same_shipping_address = form.cleaned_data.get(
+                    'same_shipping_address')
+                save_info = form.cleaned_data.get('save_info')
                 payment_option = form.cleaned_data.get('payment_option')
                 billing_address = BillingAddress(
                     user=self.request.user,
@@ -194,17 +194,12 @@ class CheckoutView(View):
                 )
                 billing_address.save()
                 order.billing_address = billing_address
+                order.ref_code = 'kh1uo2ng3'
+                order.ordered = True
                 order.save()
-
-                # add redirect to the selected payment option
-                if payment_option == 'S':
-                    return redirect('core:payment', payment_option='stripe')
-                elif payment_option == 'P':
-                    return redirect('core:payment', payment_option='paypal')
-                else:
-                    messages.warning(
-                        self.request, "Thông tin thanh toán không hợp lệ")
-                    return redirect('core:checkout')
+                messages.info(
+                    self.request, "Đặt hàng thành công")
+            return redirect('core:shop')
         except ObjectDoesNotExist:
             messages.error(self.request, "Giỏ hàng trống")
             return redirect("core:order-summary")
