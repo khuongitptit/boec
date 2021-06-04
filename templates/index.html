@@ -152,11 +152,12 @@
 
 				<div class="item-slick2 p-l-15 p-r-15">
 					<!-- Block2 -->
-					<div class="block2">
+					<div class="block2" style="height: 360px; width:100%;">
 
-						<div class="block2-img wrap-pic-w of-hidden pos-relative block2-label{{item.get_label_display}}">
+						<div class="block2-img wrap-pic-w of-hidden pos-relative block2-label{{item.get_label_display}}"
+							style="height: 80%;">
 							<a href="{{item.get_absolute_url}}">
-								<img src="{{ item.image.url }}" alt="IMG-PRODUCT" style="height: 370px; width:100%; "></a>
+								<img src="{{ item.image.url }}" alt="IMG-PRODUCT" style="margin-top: 30px;"></a>
 
 
 							<!-- <div class="block2-overlay trans-0-4">
@@ -176,16 +177,16 @@
 							</a>
 
 							{% if item.discount_price %}
-							<span class="block2-oldprice m-text7 p-r-5" style="color: black;">
-								${{ item.price }}
+							<span class="block2-oldprice m-text p-r-5" style="color: black;">
+								{{ item.price }} đ
 							</span>
 
-							<span class="block2-newprice m-text8 p-r-5">
-								${{ item.discount_price }}
+							<span class="block2-newprice m-text p-r-5">
+								{{ item.discount_price }} đ
 							</span>
 							{% else %}
-							<span class="block2-price m-text6 p-r-5" style="color: black;">
-								${{ item.price }}
+							<span class="block2-price m-text p-r-5" style="color: black;">
+								{{ item.price }} đ
 							</span>
 							{% endif %}
 

@@ -22,7 +22,7 @@
         {% csrf_token %} {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <button type="submit" class="btn btn-danger">{% trans 'Đồng ý' %}</button>
+        <button type="submit" class="btn btn-danger" style="margin-top: 20px;">Đồng ý</button>
       </form>
     </div>
   </div>

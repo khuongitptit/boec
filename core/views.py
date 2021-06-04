@@ -35,7 +35,7 @@ class PaymentView(View):
             return render(self.request, "payment.html", context)
         else:
             messages.warning(
-                self.request, "u have not added a billing address")
+                self.request, "Bạn chưa điền địa chỉ nhận hàng")
             return redirect("core:checkout")
 
     def post(self, *args, **kwargs):
@@ -62,7 +62,7 @@ class PaymentView(View):
             order.ref_code = create_ref_code()
             order.save()
 
-            messages.success(self.request, "Order was successful")
+            messages.success(self.request, "Đặt hàng thành công")
             return redirect("/")
 
         except stripe.error.CardError as e:
@@ -120,7 +120,7 @@ class OrderSummaryView(LoginRequiredMixin, View):
             }
             return render(self.request, 'order_summary.html', context)
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order")
+            messages.error(self.request, "Giỏ hàng trống")
             return redirect("/")
 
 
@@ -166,8 +166,8 @@ class CheckoutView(View):
             return render(self.request, "checkout.html", context)
 
         except ObjectDoesNotExist:
-            messages.info(self.request, "You do not have an active order")
-            return redirect("core:checkout")
+            messages.info(self.request, "Giỏ hàng trống")
+            return redirect("core:order-summary")
 
     def post(self, *args, **kwargs):
         form = CheckoutForm(self.request.POST or None)
@@ -203,10 +203,10 @@ class CheckoutView(View):
                     return redirect('core:payment', payment_option='paypal')
                 else:
                     messages.warning(
-                        self.request, "Invalid payment option select")
+                        self.request, "Thông tin thanh toán không hợp lệ")
                     return redirect('core:checkout')
         except ObjectDoesNotExist:
-            messages.error(self.request, "You do not have an active order")
+            messages.error(self.request, "Giỏ hàng trống")
             return redirect("core:order-summary")
 
 
@@ -249,14 +249,14 @@ def add_to_cart(request, slug):
             return redirect("core:order-summary")
         else:
             order.items.add(order_item)
-            messages.info(request, "Item was added to your cart.")
+            messages.info(request, "Đã thêm vào giỏ hàng")
             return redirect("core:order-summary")
     else:
         ordered_date = timezone.now()
         order = Order.objects.create(
             user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
-        messages.info(request, "Item was added to your cart.")
+        messages.info(request, "Đã thêm vào giỏ hàng")
     return redirect("core:order-summary")
 
 
@@ -276,15 +276,15 @@ def remove_from_cart(request, slug):
                 ordered=False
             )[0]
             order.items.remove(order_item)
-            messages.info(request, "Item was removed from your cart.")
+            messages.info(request, "Đã xóa mặt hàng khỏi giỏ")
             return redirect("core:order-summary")
         else:
             # add a message saying the user dosent have an order
-            messages.info(request, "Item was not in your cart.")
+            messages.info(request, "Mặt hàng không có trong giỏ")
             return redirect("core:product", slug=slug)
     else:
         # add a message saying the user dosent have an order
-        messages.info(request, "u don't have an active order.")
+        messages.info(request, "Giỏ hàng trống")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -309,15 +309,15 @@ def remove_single_item_from_cart(request, slug):
                 order_item.save()
             else:
                 order.items.remove(order_item)
-            messages.info(request, "This item qty was updated.")
+            messages.info(request, "Đã xóa mặt hàng khỏi giỏ")
             return redirect("core:order-summary")
         else:
             # add a message saying the user dosent have an order
-            messages.info(request, "Item was not in your cart.")
+            messages.info(request, "Đã thêm vào giỏ hàng")
             return redirect("core:product", slug=slug)
     else:
         # add a message saying the user dosent have an order
-        messages.info(request, "u don't have an active order.")
+        messages.info(request, "Giỏ hàng trống")
         return redirect("core:product", slug=slug)
     return redirect("core:product", slug=slug)
 
@@ -345,7 +345,7 @@ class AddCouponView(View):
                 return redirect("core:checkout")
 
             except ObjectDoesNotExist:
-                messages.info(request, "You do not have an active order")
+                messages.info(request, "Giỏ hàng trống")
                 return redirect("core:checkout")
 
 
@@ -376,9 +376,9 @@ class RequestRefundView(View):
                 refund.email = email
                 refund.save()
 
-                messages.info(self.request, "Your request was received")
+                messages.info(self.request, "Đã gửi yêu cầu")
                 return redirect("core:request-refund")
 
             except ObjectDoesNotExist:
-                messages.info(self.request, "This order does not exist")
+                messages.info(self.request, "Đơn hàng không tồn tại")
                 return redirect("core:request-refund")
